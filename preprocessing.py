@@ -35,17 +35,18 @@ def preprocess(data, lfreq=1, hfreq=80, notch=60, ica=True):
 
   return data
 
-def test():
+def test(ds):
+    num = 1 if ds == "test" else 2
     p="data/"
     info = mne.create_info(ch_names = ['P4', 'P3', 'Fp2', 'Fp1'], sfreq = 200, ch_types='eeg')
-    raw_train = read_csv(p+"sampleEEG2.txt")[[' EXG Channel 0', ' EXG Channel 1', ' EXG Channel 2', ' EXG Channel 3']].values.T
+    raw_train = read_csv(p+f"sampleEEG{num}.txt")[[' EXG Channel 0', ' EXG Channel 1', ' EXG Channel 2', ' EXG Channel 3']].values.T
     mne_train = mne.io.RawArray(raw_train, info)
-    annotated = mne_train.set_annotations(create_csv_annotations(p+"sampleEVS2.csv", 1))
+    annotated = mne_train.set_annotations(create_csv_annotations(p+f"sampleEVS{num}.csv", 1))
 
     processed = set_stnd_mon(annotated, mon='standard_1020')
     processed = preprocess(annotated)
 
-    processed.save(fname=p+"train1.fif", overwrite=True)
+    processed.save(fname=p+f"data{num}.fif", overwrite=True)
 
 
 def main():
@@ -56,7 +57,7 @@ def main():
 
     data = input("\nEnter the filename to be analyzed or leave blank to run the test data: ")
     if data == "":
-        test()
+        test("test")  # change the argument to "train" to preprocess the sample2 file
         quit()
 
     try:
@@ -73,6 +74,11 @@ def main():
             monname = input("\nSpecify the montage name or leave blank to use the 10-20 system.\n")
             if monname == "": monname = "standard_1020"
             mne_raw = set_stnd_mon(mne_raw, mon=str(monname))
+
+        res = input("\nResample the data? [y/n] ").lower()
+        if "y" in res:
+            v = int(input("\nHow many Hz? "))
+            mne_raw = mne_raw.resample(v)
 
         print("\nSpecify preprocessing parameters or leave blank to use default values")
         lf = input("High-pass filter: ")
