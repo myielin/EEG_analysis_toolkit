@@ -6,7 +6,7 @@ from sklearn.preprocessing import OneHotEncoder as ohe
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import LSTM, Dense, Input, Flatten, Conv1D, Dropout, Reshape
+from tensorflow.keras.layers import LSTM, Dense, Input, Flatten, Conv1D, Dropout, Reshape, Bidirectional
 from tensorflow.keras.callbacks import ReduceLROnPlateau, Callback
 import keras_tuner
 from functions import *
@@ -21,9 +21,10 @@ l  = len(chn)
 def build_model(p1):
   lstm = Sequential()
   lstm.add(Input( (l,n)))
+  lstm.add(Conv1D(filters=p1.Choice('filters', [5, 10, n//2, n, 2*n]),  kernel_size=(l)))
+  lstm.add(Bidirectional(LSTM(units=(p1.Choice('neurons 1', [n, 2*n, 5*n]) ), return_sequences=False)))
+  lstm.add(Dropout(rate=p1.Choice("dropout rate", [0.2,0.3, 0.4, 0.45])))
 
-  lstm.add(Conv1D(filters=p1.Choice('units', [10, n//2, n, 2*n, 5*n]),  kernel_size=(l)))
-  lstm.add(LSTM( l*n ))
   lstm.add(Dense(n*l))
   lstm.add(Reshape((l, n)))
 

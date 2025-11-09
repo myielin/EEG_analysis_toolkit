@@ -1,0 +1,8 @@
+mne
+mne-icalabel
+tensorflow
+matplotlib
+numpy
+keras
+sklearn
+keras_tuner

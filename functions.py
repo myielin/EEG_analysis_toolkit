@@ -26,7 +26,7 @@ def split_seq(seq, ch, n, step, normalize=False):
     freqs = np.empty(sigs.shape[0])
     for i in range(sigs.shape[0]):
       mne_i = mne.io.RawArray(sigs[i], info=seq.copy().pick(ch).info, verbose = False)
-      psd = mne_i.compute_psd(fmax=100, fmin=5, verbose = False)
+      psd = mne_i.compute_psd(fmax=60, fmin=5, verbose = False)
       freqs[i] = psd.freqs[np.argmax(psd.get_data()[-1])]
 
     return sigs, freqs
