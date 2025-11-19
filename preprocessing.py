@@ -36,12 +36,12 @@ def preprocess(data, lfreq=1, hfreq=80, notch=60, ica=True):
   return data
 
 def test(ds):
-    num = 1 if ds == "test" else 2
+    num = '2a' if ds == "test" else '1b'
     p="data/"
     info = mne.create_info(ch_names = ['P4', 'P3', 'Fp2', 'Fp1'], sfreq = 200, ch_types='eeg')
-    raw_train = read_csv(p+f"sampleEEG{num}.txt")[[' EXG Channel 0', ' EXG Channel 1', ' EXG Channel 2', ' EXG Channel 3']].values.T
+    raw_train = read_csv(p+f"eeg{num}.txt")[[' EXG Channel 0', ' EXG Channel 1', ' EXG Channel 2', ' EXG Channel 3']].values.T
     mne_train = mne.io.RawArray(raw_train, info)
-    annotated = mne_train.set_annotations(create_csv_annotations(p+f"sampleEVS{num}.csv", 1))
+    annotated = mne_train.set_annotations(create_csv_annotations(p+f"evs{num}.csv", 1))
 
     processed = set_stnd_mon(annotated, mon='standard_1020')
     processed = preprocess(annotated)
@@ -82,7 +82,7 @@ def main():
 
         print("\nSpecify preprocessing parameters or leave blank to use default values")
         lf = input("High-pass filter: ")
-        if lf == "": lf = 0.1
+        if lf == "": lf =  1
         hf = input("Low-pass filter: ")
         if hf == "": hf = 80
         nt = input("Notch filter: ")

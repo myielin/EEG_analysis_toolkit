@@ -13,9 +13,9 @@ from functions import *
 
 ######################## definition of variables
 p, fname, data, n, chn = init_script("SIGNAL PREDICTION", "to train the model from")
-epc = 15     # number of training epochs
+epc = 50     # number of training epochs
 
-stride = n //2
+stride = 10
 l  = len(chn)
 
 def build_model(p1):
@@ -59,10 +59,8 @@ lstm = tuner.get_best_models()[0]
 
 print("\n\nEnd of training\nModel evaluation: ")
 print("Best hyperperparameters discovered:\n  ", tuner.get_best_hyperparameters()[0].values, "\n")
-
+sv_model(lstm)
 pred, real = test_model(x_test,y_test, 10)
 
 print("\nSome predicted values from the first channel: ", pred[0, 0,:6])
 print("Some real values from from the first channel  :      ", real[0,:6])
-
-sv_model(lstm)

@@ -51,6 +51,6 @@ def anim(f):
     ax.set_xlim(xdata[0], xdata[-1])  # scroll x-axis
     return ps, rs
 
-ani = animation.FuncAnimation(fig, anim, interval=100, init_func=init, blit=True).save(filename=p+"example.gif", writer="pillow")
+ani = animation.FuncAnimation(fig, anim, interval=100, init_func=init, blit=True)#.save(filename=p+"example.gif", writer="pillow")
 ### uncomment the next line to save a gif
 plt.show()
